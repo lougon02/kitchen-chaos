@@ -12,9 +12,16 @@ public class Player : MonoBehaviour {
 
     private bool isWalking = false;
 
+    private void Start() {
+        gameInput.OnInteract += GameInput_OnInteract;
+    }
+
+    private void GameInput_OnInteract(object sender, System.EventArgs e) {
+        HandleInteractions();
+    }
+
     private void Update() {
         HandleMovement();
-        HandleInteractions();
     }
 
     public bool IsWalking() {
