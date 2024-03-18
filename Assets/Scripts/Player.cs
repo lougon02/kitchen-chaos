@@ -4,22 +4,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour, IKitchenObjectParent {
 
     public static Player Instance { get; private set; }
 
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs {
-        public ClearCounter selectedCounter;
+        public BaseCounter selectedCounter;
     }
 
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotateSpeed = 10f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask countersLayerMask;
+    [SerializeField] private Transform objectSpawnPoint;
 
+    private KitchenObject kitchenObject;
     private bool isWalking = false;
-    private ClearCounter selectedCounter;
+    private BaseCounter selectedCounter;
 
     private void Awake() {
         if (Instance != null) Debug.LogError("There is more than one Player instance in the scene");
@@ -33,7 +35,7 @@ public class Player : MonoBehaviour {
 
     private void GameInput_OnInteract(object sender, System.EventArgs e) {
         if (selectedCounter != null) {
-            selectedCounter.Interact();
+            selectedCounter.Interact(this);
         }
     }
 
@@ -50,9 +52,9 @@ public class Player : MonoBehaviour {
         float interactDistance = 2f;
 
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, interactDistance, countersLayerMask)) {
-            if (hit.transform.TryGetComponent(out ClearCounter clearCounter)) {
-                if (clearCounter != selectedCounter) 
-                    SetSelectedCounter(clearCounter);
+            if (hit.transform.TryGetComponent(out BaseCounter baseCounter)) {
+                if (baseCounter != selectedCounter) 
+                    SetSelectedCounter(baseCounter);
 
             } else SetSelectedCounter(null);
         } else SetSelectedCounter(null);
@@ -91,11 +93,31 @@ public class Player : MonoBehaviour {
         isWalking = moveDir != Vector3.zero;
     }
 
-    private void SetSelectedCounter(ClearCounter selectedCounter) {
+    private void SetSelectedCounter(BaseCounter selectedCounter) {
         this.selectedCounter = selectedCounter;
 
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs {
             selectedCounter = selectedCounter
         });
+    }
+
+    public Transform GetObjectSpawnPoint() {
+        return objectSpawnPoint;
+    }
+
+    public void SetKitchenObject(KitchenObject kitchenObject) {
+        this.kitchenObject = kitchenObject;
+    }
+
+    public KitchenObject GetKitchenObject() {
+        return kitchenObject;
+    }
+
+    public void ClearKitchenObject() {
+        kitchenObject = null;
+    }
+
+    public bool HasKitchenObject() {
+        return kitchenObject != null;
     }
 }
