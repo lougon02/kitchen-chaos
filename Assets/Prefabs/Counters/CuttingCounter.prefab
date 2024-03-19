@@ -98,6 +98,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectSpawnPoint: {fileID: 1343399980260524307}
+  cuttingRecipeSOArray:
+  - {fileID: 11400000, guid: e472a793b7901f04b946f9732d6d0a5c, type: 2}
+  - {fileID: 11400000, guid: 80d9e5e2a3d0be247b7d92d7bd9fd058, type: 2}
+  - {fileID: 11400000, guid: da526bbecdefd7140890a560cb326023, type: 2}
 --- !u!4 &1343399980260524307 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1353383256637503703, guid: 1c7bf03b371e6a749bbbcfe8908db956,
