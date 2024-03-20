@@ -42,7 +42,23 @@ public class StoveCounter : BaseCounter, IHasProgress {
                 }
             }
         } else {
-            if (!player.HasKitchenObject()) {
+            if (player.HasKitchenObject()) {
+                if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)) {
+                    // Player is carrying plate
+
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) {
+                        // Counter has a valid ingredient here
+                        GetKitchenObject().DestroySelf();
+
+                        ChangeActiveRecipe(null);
+
+                        fryingTimer = 0f;
+                        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs {
+                            progress = 0f
+                        });
+                    };
+                }
+            } else {
                 GetKitchenObject().SetKitchenObjectParent(player);
                 ChangeActiveRecipe(null);
 
