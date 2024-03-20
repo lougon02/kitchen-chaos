@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc9053c104cc9f140a344769c871f1a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cuttingCounter: {fileID: 3327475864343377534}
+  objWithProgress: {fileID: 29930086412318768}
   barImage: {fileID: 8922061087537955384}
 --- !u!114 &1511077289401354890
 MonoBehaviour:

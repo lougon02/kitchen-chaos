@@ -5,6 +5,7 @@ using UnityEngine;
 public class TrashCounter : BaseCounter {
 
     public override void Interact(Player player) {
-        player.GetKitchenObject().DestroySelf();
+        if (player.HasKitchenObject())
+            player.GetKitchenObject().DestroySelf();
     }
 }
