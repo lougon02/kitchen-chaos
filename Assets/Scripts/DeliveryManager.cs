@@ -1,8 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DeliveryManager : MonoBehaviour {
+
+    public event EventHandler OnRecipeSpawned;
+    public event EventHandler OnDeliveryCompleted;
 
     public static DeliveryManager Instance { get; private set; }
 
@@ -11,10 +15,13 @@ public class DeliveryManager : MonoBehaviour {
     [SerializeField] private int waitingRecipesMax = 4;
 
     private List<RecipeSO> waitingRecipeList = new List<RecipeSO>();
-    private float spawnRecipeTimer = 0f;
+    private float spawnRecipeTimer;
     
     private void Awake() {
         Instance = this;
+
+        // To spawn one immediatly
+        spawnRecipeTimer = recipeSpawnTime;
     }
 
     private void Update() {
@@ -24,36 +31,48 @@ public class DeliveryManager : MonoBehaviour {
 
             if (waitingRecipeList.Count >= waitingRecipesMax) return;
 
-            RecipeSO waitingRecipeSO = recipeList.recipeSOList[Random.Range(0, recipeList.recipeSOList.Count)];
+            RecipeSO waitingRecipeSO = recipeList.recipeSOList[UnityEngine.Random.Range(0, recipeList.recipeSOList.Count)];
             waitingRecipeList.Add(waitingRecipeSO);
-            Debug.Log(waitingRecipeSO.recipeName);
+
+            OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
         }
     }
 
     public void DeliverRecipe(PlateKitchenObject plateKitchenObject) {
         foreach (RecipeSO waitingRecipeSO in waitingRecipeList) {
             // For all recipes
-            if(waitingRecipeSO.ingredientSOList.Count == plateKitchenObject.GetIngredientsList().Count) {
+            bool isCorrectRecipe = true;
+            if (waitingRecipeSO.ingredientSOList.Count == plateKitchenObject.GetIngredientsList().Count) {
                 // Has same number of ingredients
-                foreach(KitchenObjectSO ingredient in plateKitchenObject.GetIngredientsList()) {
+                foreach (KitchenObjectSO ingredient in plateKitchenObject.GetIngredientsList()) {
                     // For all ingredients in the plate
                     if (!waitingRecipeSO.ingredientSOList.Contains(ingredient)) {
                         // Ingredient not found in recipe, recipe incorrect
-                        Debug.Log("Incorrect recipe");
-                        return;
+                        isCorrectRecipe = false;
+                        break;
                     } else {
                         // Ingredient found in recipe
                     }
                 }
+
+                if (isCorrectRecipe) {
+                    // Recipe found
+                    Debug.Log("Correct recipe");
+                    waitingRecipeList.Remove(waitingRecipeSO);
+                    OnDeliveryCompleted?.Invoke(this, EventArgs.Empty);
+                    return;
+                }
+
             } else {
                 // Has different number of ingredients, recipe incorrect
-                Debug.Log("Incorrect recipe");
-                return;
+                continue;
             }
         }
+        Debug.Log("Incorrect recipe");
+    }
 
-        // Recipe is correct
-        Debug.Log("Correct recipe");
+    public List<RecipeSO> GetWaitingRecipeList() {
+        return waitingRecipeList;
     }
 
 }
