@@ -6,6 +6,8 @@ using UnityEngine.Rendering;
 
 public class Player : MonoBehaviour, IKitchenObjectParent {
 
+    public event EventHandler OnPickedObject;
+
     public static Player Instance { get; private set; }
 
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
@@ -114,6 +116,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
 
     public void SetKitchenObject(KitchenObject kitchenObject) {
         this.kitchenObject = kitchenObject;
+
+        if (kitchenObject != null) OnPickedObject?.Invoke(this, EventArgs.Empty);
     }
 
     public KitchenObject GetKitchenObject() {

@@ -7,6 +7,7 @@ public class DeliveryManager : MonoBehaviour {
 
     public event EventHandler OnRecipeSpawned;
     public event EventHandler OnDeliveryCompleted;
+    public event EventHandler OnDeliveryFailed;
 
     public static DeliveryManager Instance { get; private set; }
 
@@ -69,6 +70,7 @@ public class DeliveryManager : MonoBehaviour {
             }
         }
         Debug.Log("Incorrect recipe");
+        OnDeliveryFailed?.Invoke(this, EventArgs.Empty);
     }
 
     public List<RecipeSO> GetWaitingRecipeList() {
