@@ -6,7 +6,7 @@ public class SoundManager : MonoBehaviour {
 
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;
 
-    public static SoundManager Instance;
+    public static SoundManager Instance { get; private set; }
 
     private void Awake() {
         if (Instance == null) {
@@ -33,7 +33,7 @@ public class SoundManager : MonoBehaviour {
     }
 
 
-    private void PlaySound(string audioClipName, Vector3 position, float volume = 1f) {
+    public void PlaySound(string audioClipName, Vector3 position, float volume = 1f) {
         if (audioClipRefsSO.TryGetAudioClips(audioClipName, out AudioClip[] audioClips)) 
             AudioSource.PlayClipAtPoint(audioClips[Random.Range(0, audioClips.Length)], position, volume);
 

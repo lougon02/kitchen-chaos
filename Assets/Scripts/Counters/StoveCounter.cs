@@ -13,6 +13,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
 
     private FryingRecipeSO fryingRecipeSO;
     private float fryingTimer = 0;
+    private bool isCooking = false;
 
     private void Update() {
         if (HasKitchenObject() && fryingRecipeSO != null) {
@@ -71,9 +72,11 @@ public class StoveCounter : BaseCounter, IHasProgress {
     }
 
     private void ChangeActiveRecipe(FryingRecipeSO newFryingRecipeSO) {
-        if((fryingRecipeSO == null) ^ (newFryingRecipeSO == null))
+        if((fryingRecipeSO == null) ^ (newFryingRecipeSO == null)) {
             // State Changed
+            isCooking = !isCooking;
             OnStateChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         fryingRecipeSO = newFryingRecipeSO;
     }
@@ -98,5 +101,9 @@ public class StoveCounter : BaseCounter, IHasProgress {
         }
 
         return null;
+    }
+
+    public bool IsCooking() {
+        return isCooking;
     }
 }
