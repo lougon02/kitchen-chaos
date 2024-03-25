@@ -17,6 +17,7 @@ public class DeliveryManager : MonoBehaviour {
 
     private List<RecipeSO> waitingRecipeList = new List<RecipeSO>();
     private float spawnRecipeTimer;
+    private int correctRecipesDelivered;
     
     private void Awake() {
         Instance = this;
@@ -59,6 +60,7 @@ public class DeliveryManager : MonoBehaviour {
                 if (isCorrectRecipe) {
                     // Recipe found
                     Debug.Log("Correct recipe");
+                    correctRecipesDelivered++;
                     waitingRecipeList.Remove(waitingRecipeSO);
                     OnDeliveryCompleted?.Invoke(this, EventArgs.Empty);
                     return;
@@ -75,6 +77,10 @@ public class DeliveryManager : MonoBehaviour {
 
     public List<RecipeSO> GetWaitingRecipeList() {
         return waitingRecipeList;
+    }
+
+    public int GetCorrectRecipesDelivered() {
+        return correctRecipesDelivered;
     }
 
 }
