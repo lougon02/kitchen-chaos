@@ -813,7 +813,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resumeButton: {fileID: 179566228}
   mainMenuButton: {fileID: 524969350}
-  optionsButton: {fileID: 0}
+  optionsButton: {fileID: 1818919599}
 --- !u!1 &247025586
 GameObject:
   m_ObjectHideFlags: 0
@@ -7367,6 +7367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundEffectsButton: {fileID: 1496958474}
   musicButton: {fileID: 1427499306}
+  closeButton: {fileID: 247025588}
   soundEffectsText: {fileID: 74763566}
   musicText: {fileID: 2083616267}
 --- !u!1001 &2033760384
