@@ -6,7 +6,11 @@ public class SoundManager : MonoBehaviour {
 
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;
 
+    private const string PLAYER_PREFS_SFX_VOLUME = "SfxVolume";
+
     public static SoundManager Instance { get; private set; }
+
+    private float volume = 1f;
 
     private void Awake() {
         if (Instance == null) {
@@ -14,6 +18,8 @@ public class SoundManager : MonoBehaviour {
         } else {
             Destroy(gameObject);
         }
+
+        volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SFX_VOLUME, 1f);
     }
 
     private void Start() {
@@ -33,10 +39,22 @@ public class SoundManager : MonoBehaviour {
     }
 
 
-    public void PlaySound(string audioClipName, Vector3 position, float volume = 1f) {
+    public void PlaySound(string audioClipName, Vector3 position, float volumeMultiplier = 1f) {
         if (audioClipRefsSO.TryGetAudioClips(audioClipName, out AudioClip[] audioClips)) 
-            AudioSource.PlayClipAtPoint(audioClips[Random.Range(0, audioClips.Length)], position, volume);
+            AudioSource.PlayClipAtPoint(audioClips[Random.Range(0, audioClips.Length)], position, volumeMultiplier * volume);
 
+    }
+
+    public void ChangeVolume() {
+        volume += 0.1f;
+        if (volume > 1f) volume = 0f;
+
+        PlayerPrefs.SetFloat(PLAYER_PREFS_SFX_VOLUME, volume);
+        PlayerPrefs.Save();
+    }
+
+    public float GetVolume() {
+        return volume;
     }
 
 }
